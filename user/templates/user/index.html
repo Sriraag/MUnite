@@ -71,6 +71,7 @@
             <li><a href="{% url "index" %}">Home</a></li>
 
             {% if user.is_authenticated %}
+            <li><a href="{% url "user" username=user %}">{{ user }}</a></li>
             <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> &nbsp; Logout</a></li>
             {% else %}
             <li><a href="{% url "register" %}"><span class="glyphicon glyphicon-user"></span> &nbsp; Sign up</a></li>

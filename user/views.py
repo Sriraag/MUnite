@@ -83,3 +83,8 @@ def loggedin(request, username):
     }
 
     return render(request, 'user/profile.html', throw_to_frontend)
+
+
+def password_change(request):
+
+    return render(request, 'user/change_password.html', {'title':'MUnite'})
