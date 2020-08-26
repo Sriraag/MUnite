@@ -21,10 +21,12 @@
   <!-- bootstrap file-->
 
   <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  
+
 
   <!-- main css -->
   <link rel="stylesheet" type="text/css" href="{% static "index.css" %}" />
@@ -49,7 +51,7 @@
 </head>
 
 <body class="container-fluid">
-  
+
 
 
   <header class="row">
@@ -69,37 +71,40 @@
         <div class="collapse navbar-collapse" id="mainNavBar">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="{% url "index" %}">Home</a></li>
-
             {% if user.is_authenticated %}
+            <li><a href="/">{{ username }}</a></li>
             <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> &nbsp; Logout</a></li>
             {% else %}
             <li><a href="{% url "register" %}"><span class="glyphicon glyphicon-user"></span> &nbsp; Sign up</a></li>
             <li><a href="{% url "login" %}"><span class="glyphicon glyphicon-log-in"></span> &nbsp; Log in</a></li>
             {% endif %}
+            
+            
 
           </ul>
         </div>
       </div>
     </nav>
   </header>
-  <br/>
+  <br />
   <br>
   <br>
   <div class="row">
     {% block start %}
     {% if user.is_authenticated %}
-    <div class="container">
-      <h1>Welcome MUN Lovers</h1>
-      <h4>Our platfrom MUnite is for MUN oraganizers and delegates who want to participate...</h4>
-    </div>
-
+    <center>
+      <h2>Hey {{ username }} !</h2>
+      <p><strong>Full name: </strong> {{ name|title }}</p>
+      <p><strong>Date Joined: </strong> {{ join_date }}</p>
+      <p><strong>ACHEIVEMENTS -</strong></p>
+      <p>{{ acheivement }}</p>
+    
+    </center>
     {% else %}
-    <div class="container">
-      <h1>Welcome MUN Lovers</h1>
-      <h4>Our platfrom, MUnite, is for MUN oraganizers and delegates who want to participate in MUNs...</h4><br>
-      <h4>Please <a href="{% url "login" %}">login</a> to continue</h4>
-    </div>
+    <center><p>{{username |title }} <a href="{% url "login" %}">Log in</a> Please</p></center>
     {% endif %}
+    
+
     {% endblock %}
   </div>
 </body>

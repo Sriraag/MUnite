@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-   
+    'user.apps.UserConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -54,9 +54,9 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'MUnite.urls'
 
 TEMPLATES = [
- {
+{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': ['/Users/sriraag/Documents/MUnite/user/templates',],
+    'DIRS': [],
     'APP_DIRS': True,
     'OPTIONS': {
         'context_processors': [
@@ -66,7 +66,7 @@ TEMPLATES = [
             'django.contrib.messages.context_processors.messages',
         ],
     },
- },
+},
 ]
 WSGI_APPLICATION = 'MUnite.wsgi.application'
 
@@ -106,7 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Calcutta'
 
 USE_I18N = True
 
