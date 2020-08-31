@@ -1,0 +1,81 @@
+{% extends "user/index.html" %}
+{% load crispy_forms_tags %}
+{% block start %}
+<!--
+    javascrip for adding committees dynamically
+  -->
+
+<script>
+  var counter = 1;
+  var limit = 5;
+  function addInput(divName) {
+    if (counter == limit) {
+      alert("You have reached the limit of adding " + counter + " inputs");
+    }
+    else {
+      var newdiv = document.createElement('div');
+      newdiv.innerHTML = "<br><h4>Committee " + (counter + 1) + ":</h4><label for='name'>Name: </label><input type = 'text' id = 'name' name = 'name' placeholder = 'Name' > <br><label for='seats'>Total registrations: </label><input type='number' id='seats' name='seats' >";
+
+      document.getElementById(divName).appendChild(newdiv);
+      counter++;
+    }
+  }
+</script>
+
+
+
+<div class="container">
+{% if user.is_authenticated %}
+  <h2>Create your own MUN Event</h2>
+  <br>
+  <form action="/submitted" method="POST">
+    {% csrf_token %}
+    
+    <label for="event">Event name:</label>
+    <input type="text" id="event" name="event" placeholder="Event"><br>
+
+    <label for="org">Organization name:</label>
+    <input type="text" id="org" name="org" placeholder="Organization"><br>
+
+    <label for="date">Date: </label>
+    <input type="date" id="date" name="date" ><br>
+
+    <label for="venue">Venue: </label>
+    <input type="text" id="venue" name="venue" placeholder="Venue"><br>
+
+    <label for="price">Reigstration Price per head: </label>
+    <input type="number" id="price" name="price" placeholder="Price"><br>
+
+    <h2>Committees</h2>
+    <div id="dynamicInput">
+      <h4>Committee 1: </h4>
+      <label for="name">Name: </label>
+      <input type="text" id="name" name="name" placeholder="Name"><br>
+
+      <label for="seats">Total registrations: </label>
+      <input type="number" id="seats" name="seats" >
+    </div>
+    <input type="button" value="Add Committee" onClick="addInput('dynamicInput');">
+
+    <br><br>
+    <button class="btn waves-effect waves-light" type="submit" name="action">
+
+      Submit<i class="material-icons right"></i>
+    </button>
+
+  </form>
+
+</div>
+{% else %}
+<div class="container">
+
+  <h4>Please <a href="{% url "login" %}">login</a> to continue</h4>
+</div>
+{% endif %}
+{% endblock %}
+</div>
+
+
+</body>
+  
+</html>

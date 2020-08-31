@@ -90,8 +90,27 @@
     {% block start %}
     {% if user.is_authenticated %}
     <div class="container">
-      <h1>Welcome MUN Lovers</h1>
+      <h1>Welcome, {{ user }}</h1>
       <h4>Our platfrom MUnite is for MUN oraganizers and delegates who want to participate...</h4>
+      <br>
+      <h4>Create your own MUN event here: </h4>
+      <form action="{% url "create_event" username=user %}" method="POST">
+        {% csrf_token %}
+        <input type="submit"  value="Create new event" name="submit" style="background:green; color: white;">
+      </form>
+      <br>
+      <h1>List of events coming</h1>
+      {% for e in events %}
+        <p>{{e.0}}</p>
+        <p>{{e.1}}</p>
+        <p>{{e.2}}</p>
+        <p>{{e.3}}</p>
+        <p>{{e.4}}</p>
+        <br>
+        <br>
+      {% empty %}
+        <h4>No events coming up</h4>
+      {% endfor %}
     </div>
 
     {% else %}

@@ -8,11 +8,59 @@ from django.template.loader import get_template
 from django.template import Context 
 from django.utils import timezone
 
-from .models import Delegate
+from .models import Delegate, Event
 
 #################### index#######################################  
 def index(request): 
-    return render(request, 'user/index.html', {'title':'index'}) 
+
+    all_events = Event.objects.all()
+    D=[]
+    for i in all_events:
+        event = i.event
+        organization = i.organization
+        date = i.date
+        venue = i.venue
+        price = i.price
+        L = (event, organization, date, venue, price)
+        D.append(L) 
+    
+    throw_to_frontend = {
+        'events':D
+    }
+    return render(request, 'user/index.html', throw_to_frontend)
+
+
+############ event registration saving in database ################################
+def save_event(request):
+    #getting current logged in username
+    username = request.user.get_username()
+    #getting id of currently logged in username 
+    #id used in creating new Event object 
+    id = Delegate.objects.only('id').get(name=username).id
+    event = request.POST.get('event')
+    organization = request.POST.get('org')
+    date = request.POST.get('date')
+    venue = request.POST.get('venue')
+    price = request.POST.get('price')
+    Event.objects.create(core_organizer_id=id, event=event,
+    organization=organization, date=date, venue=venue, price=price)
+
+    ##### showing index page with new events
+    all_events = Event.objects.all()
+    D = []
+    for i in all_events:
+        event = i.event
+        organization = i.organization
+        date = i.date
+        venue = i.venue
+        price = i.price
+        L = (event, organization, date, venue, price)
+        D.append(L)
+
+    throw_to_frontend = {
+        'events': D
+    }
+    return render(request, 'user/index.html', throw_to_frontend)
 
 ########### register here #####################################  
 def register(request): 
@@ -36,19 +84,20 @@ def register(request):
             #msg.send() 
             ##################################################################  
             messages.success(request, f'Your account has been created ! You are now able to log in') 
-            newUser = Delegate(name=username, join_date=timezone.now(), first_name=Fname ,last_name = Lname,acheivement="none")
+            newUser = Delegate(name=username, rating=0 , join_date=timezone.now(), first_name=Fname ,last_name = Lname,acheivement="none")
             newUser.save()
             return redirect('login') 
     else: 
         form = UserRegisterForm() 
     return render(request, 'user/register.html', {'form': form, 'title':'register here'}) 
-   
-################ login forms###################################################  
+
+################ login forms############################################################# 
+#  
 def Login(request): 
     if request.method == 'POST': 
-   
+
         # AuthenticationForm_can_also_be_used__ 
-   
+
         username = request.POST['username'] 
         password = request.POST['password'] 
         
@@ -56,19 +105,20 @@ def Login(request):
         if user is not None: 
             form = login(request, user) 
             messages.success(request, f' welcome {username} !!') 
-            url = 'user/' + username
+            ##url = 'user/' + username
             
-            return redirect(url) 
+            return redirect('/') 
         else: 
             messages.info(request, f'Account does not exist. Please try again') 
     form = AuthenticationForm() 
     return render(request, 'user/login.html', {'form': form, 'title':'log in'}) 
 
-"""
-    NEW LOGGED IN FUNCTION WHICH SENDS TO PROFILE PAGE OF THE USER
-"""
+
+########NEW LOGGED IN FUNCTION WHICH SENDS TO PROFILE PAGE OF THE USER ############
+
 def loggedin(request, username):
     d = Delegate.objects.get(name=username)  
+    rating = d.rating
     date_joined = d.join_date
     acheivements = d.acheivement
     fname = d.first_name
@@ -76,15 +126,18 @@ def loggedin(request, username):
     name = fname + ' ' + lname
     throw_to_frontend ={
         'title': 'Profile',
+        'rating': rating,
         'name' : name,
         'username': username,
         'join_date': date_joined,
         'acheivement': acheivements,
     }
-
     return render(request, 'user/profile.html', throw_to_frontend)
 
+########## Returning create_event page #######################
+def create_event(request, username):
+    return render(request, 'user/create_event.html', {'title': 'Create event'})
 
+############  Returning password change page ####################
 def password_change(request):
-
     return render(request, 'user/change_password.html', {'title':'MUnite'})
