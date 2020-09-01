@@ -8,6 +8,7 @@ from user import views
 
 urlpatterns = [ 
     path('', views.index, name='index'), 
+    path('event/<str:event_name>', views.show_event, name='event'),
     path('submitted', views.save_event, name='save_event'),
     path('login/user/<str:username>', views.loggedin, name='user'),
     path('create-event/<str:username>', views.create_event,  name='create_event'),

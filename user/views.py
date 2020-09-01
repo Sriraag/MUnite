@@ -42,8 +42,9 @@ def save_event(request):
     date = request.POST.get('date')
     venue = request.POST.get('venue')
     price = request.POST.get('price')
+    description = request.POST.get('description')
     Event.objects.create(core_organizer_id=id, event=event,
-    organization=organization, date=date, venue=venue, price=price)
+    organization=organization, date=date, venue=venue, price=price, description=description)
 
     ##### showing index page with new events
     all_events = Event.objects.all()
@@ -54,7 +55,8 @@ def save_event(request):
         date = i.date
         venue = i.venue
         price = i.price
-        L = (event, organization, date, venue, price)
+        des = i.description
+        L = (event, organization, date, venue, price, des)
         D.append(L)
 
     throw_to_frontend = {
@@ -141,3 +143,15 @@ def create_event(request, username):
 ############  Returning password change page ####################
 def password_change(request):
     return render(request, 'user/change_password.html', {'title':'MUnite'})
+
+
+def show_event(request, event_name):
+    id = Event.objects.only('id').get(event=event_name).id
+    
+    e = Event.objects.get(id=id)
+    D = [e.event, e.organization, e.date, e.venue, e.price, e.description]
+    stuff_for_frontend = {
+        'event':D
+    }
+
+    return render(request, 'user/event_description.html', stuff_for_frontend)
