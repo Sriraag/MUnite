@@ -10,11 +10,13 @@ from django.utils import timezone
 
 from .models import Delegate, Event
 
-#################### index#######################################
-def index(request):
+# INDEX
 
-    all_events = Event.objects.all()
+
+def index(request):
+    all_events = Event.objects.all().order_by('-date')
     D=[]
+    myEvents = []
     for i in all_events:
         organizer = i.core_organizer
         event = i.event
@@ -22,11 +24,15 @@ def index(request):
         date = i.date
         venue = i.venue
         price = i.price
+
+        if str(organizer) == str(request.user):
+            myEvents.append(event)
         L = (event, organization, date, venue, price, organizer)
         D.append(L)
 
     throw_to_frontend = {
-        'events':D
+        'events': D,
+        'myEvents': myEvents,
     }
     return render(request, 'user/index.html', throw_to_frontend)
 
@@ -34,10 +40,10 @@ def index(request):
 ############ event registration saving in database ################################
 def save_event(request):
     print(request.POST)
-    #getting current logged in username
+    # getting current logged in username
     username = request.user.get_username()
-    #getting id of currently logged in username
-    #id used in creating new Event object
+    # getting id of currently logged in username
+    # id used in creating new Event object
     id = Delegate.objects.only('id').get(name=username).id
     event = request.POST.get('event')
     organization = request.POST.get('org')
@@ -48,25 +54,9 @@ def save_event(request):
     Event.objects.create(core_organizer_id=id, event=event,
     organization=organization, date=date, venue=venue, price=price, description=description)
 
-    ##### showing index page with new events
-    all_events = Event.objects.all()
-    D = []
-    for i in all_events:
-        event = i.event
-        organization = i.organization
-        date = i.date
-        venue = i.venue
-        price = i.price
-        des = i.description
-        L = (event, organization, date, venue, price, des)
-        D.append(L)
+    return redirect(index)  # redirects for index view to run
 
-    throw_to_frontend = {
-        'events': D
-    }
-    return render(request, 'user/index.html', throw_to_frontend)
-
-########### register here #####################################
+# register here
 
 
 def register(request):
@@ -99,7 +89,8 @@ def register(request):
     return render(request, 'user/register.html', {'form': form, 'title':'register here'})
 
 ###### login forms
-#  
+
+
 def Login(request):
     if request.method == 'POST':
 
@@ -137,7 +128,6 @@ def loggedin(request, username):
     fname = d.first_name
     lname = d.last_name
     name = fname + ' ' + lname
-
 
     throw_to_frontend ={
         'title': 'Profile',

@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% block start %}
 <!--
-    javascrip for adding committees dynamically
+    javascript for adding committees dynamically
   -->
 
 <script>
@@ -62,7 +62,6 @@
 
     <br><br>
     <button class="btn waves-effect waves-light" type="submit" name="action">
-
       Submit<i class="material-icons right"></i>
     </button>
 
@@ -72,7 +71,7 @@
 {% else %}
 <div class="container">
 
-  <h4>Please <a href="{% url "login" %}">login</a> to continue</h4>
+  <h4>Please <a href="{% url 'login' %}">login</a> to continue</h4>
 </div>
 {% endif %}
 {% endblock %}

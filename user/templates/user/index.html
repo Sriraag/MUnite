@@ -94,26 +94,23 @@
       <h4>Our platfrom MUnite is for MUN oraganizers and delegates who want to participate...</h4>
       <br>
       <h4>Create your own MUN event here: </h4>
-      <form action="{% url "create_event" username=user %}" method="POST">
+      <form action="{% url 'create_event' username=user %}" method="POST">
         {% csrf_token %}
-        <input type="submit"  value="Create new event" name="submit" style="background:green; color: white;">
+        <button type="submit" class="btn btn-success" name="submit">Create Event</button>
       </form>
       <br>
       <h1>Your Events</h1>
-      {% for e in events %}
-        {% if e.5 == request.user %}
-          <p>{{e.0}}</p>
-          <p>{{e.1}}</p>
-          <p>{{e.2}}</p>
-          <p>{{e.3}}</p>
-          <br>
-          <br><br>
-        {% else %}
-        
-          <h4>{{ request.user }}</h4>
-          <p>{{ e.5 }}</p>
-        {% endif %}
-      {% endfor %}  
+      {% if myEvents %}
+        {% for e in myEvents %}
+
+            <h4>{{ e }}</h4>
+            <a class="btn btn-primary" role="button" id="changePic" >Edit Event</a>
+            <a class="btn btn-danger" role="button" id="changePic" >Delete Event</a>
+            <br>
+        {% endfor %}
+      {% else %}
+        <h4>You have not created any events yet.</h4>
+      {% endif %}
       <br>
 
       <h1>List of events coming</h1>
