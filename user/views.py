@@ -16,12 +16,13 @@ def index(request):
     all_events = Event.objects.all()
     D=[]
     for i in all_events:
+        organizer = i.core_organizer
         event = i.event
         organization = i.organization
         date = i.date
         venue = i.venue
         price = i.price
-        L = (event, organization, date, venue, price)
+        L = (event, organization, date, venue, price, organizer)
         D.append(L) 
     
     throw_to_frontend = {
@@ -32,6 +33,7 @@ def index(request):
 
 ############ event registration saving in database ################################
 def save_event(request):
+    print(request.POST)
     #getting current logged in username
     username = request.user.get_username()
     #getting id of currently logged in username 
@@ -119,6 +121,13 @@ def Login(request):
 ########NEW LOGGED IN FUNCTION WHICH SENDS TO PROFILE PAGE OF THE USER ############
 
 def loggedin(request, username):
+    login = str(request.user)
+    if username != login:
+        canedit = 0
+    else:
+        canedit = 1
+
+
     d = Delegate.objects.get(name=username)  
     rating = d.rating
     date_joined = d.join_date
@@ -126,13 +135,17 @@ def loggedin(request, username):
     fname = d.first_name
     lname = d.last_name
     name = fname + ' ' + lname
+
+
     throw_to_frontend ={
         'title': 'Profile',
         'rating': rating,
-        'name' : name,
+        'name': name,
         'username': username,
         'join_date': date_joined,
         'acheivement': acheivements,
+        'profile_pic': d.profile_pic,
+        'edit':  canedit,
     }
     return render(request, 'user/profile.html', throw_to_frontend)
 

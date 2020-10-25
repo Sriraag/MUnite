@@ -8,6 +8,7 @@ class Delegate(models.Model):
   first_name = models.CharField(max_length=200)
   last_name = models.CharField(max_length=200)
   acheivement = models.CharField(max_length=500)
+  profile_pic = models.ImageField(upload_to='profile_picture/', blank=True, null=True, default='profile_picture/default-profile-picture1.jpg')
 
   def __str__(self):
     return self.name

@@ -9,7 +9,7 @@
   <meta name="title" content="project">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="language" content="English">
-  <meta name="author" content="vinayak sharma">
+  <meta name="author">
 
   <title>{{title}}</title>
 
@@ -27,7 +27,7 @@
   
 
   <!-- main css -->
-  <link rel="stylesheet" type="text/css" href="{% static "index.css" %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}" />
 
 
   <!-- message here -->
@@ -64,18 +64,18 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" class="styleheader" href="{% url "index" %}">MUnite</a>
+          <a class="navbar-brand" class="styleheader" href="{% url 'index' %}">MUnite</a>
         </div>
         <div class="collapse navbar-collapse" id="mainNavBar">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="{% url "index" %}">Home</a></li>
+            <li><a href="{% url 'index' %}">Home</a></li>
 
             {% if user.is_authenticated %}
-            <li><a href="{% url "user" username=user %}">{{ user }}</a></li>
-            <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> &nbsp; Logout</a></li>
+            <li><a href="{% url 'user' username=user %}">{{ user }}</a></li>
+            <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> &nbsp; Logout</a></li>
             {% else %}
-            <li><a href="{% url "register" %}"><span class="glyphicon glyphicon-user"></span> &nbsp; Sign up</a></li>
-            <li><a href="{% url "login" %}"><span class="glyphicon glyphicon-log-in"></span> &nbsp; Log in</a></li>
+            <li><a href="{% url 'register' %}"><span class="glyphicon glyphicon-user"></span> &nbsp; Sign up</a></li>
+            <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> &nbsp; Log in</a></li>
             {% endif %}
 
           </ul>
@@ -99,13 +99,32 @@
         <input type="submit"  value="Create new event" name="submit" style="background:green; color: white;">
       </form>
       <br>
+      <h1>Your Events</h1>
+      {% for e in events %}
+        {% if e.5 == request.user %}
+          <p>{{e.0}}</p>
+          <p>{{e.1}}</p>
+          <p>{{e.2}}</p>
+          <p>{{e.3}}</p>
+          <br>
+          <br><br>
+        {% else %}
+        
+          <h4>{{ request.user }}</h4>
+          <p>{{ e.5 }}</p>
+        {% endif %}
+      {% endfor %}  
+      <br>
+
       <h1>List of events coming</h1>
       {% for e in events %}
+        
         <p><a href="{% url "event" event_name=e.0 %}">{{e.0}}</a></p>
         <p>{{e.1}}</p>
         <p>{{e.2}}</p>
         <p>{{e.3}}</p>
         <p>Price : {{e.4}}</p>
+        <p>Organized By - {{ e.5 }}</p>
         <br>
         <br>
       {% empty %}

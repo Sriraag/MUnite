@@ -5,22 +5,56 @@
     
     {% if user.is_authenticated %}
     <center>
-      <h2>Hey {{ username }} !</h2>
+
+
+        <img src="{{ profile_pic.url }}" alt="" height="250px">
+        {% if edit %}
+            <a class="btn btn-primary" role="button" id="changePic" data-toggle="modal" data-target="#myModal">change picture</a>
+            <!-- MODAL CODE -->
+            <div id="myModal" class="modal fade">
+            <div class="modal-dialog modal-newsletter">
+                <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h4>Change picture</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/profile">
+                              <label for="img">Select image:</label>
+                              <input type="file" id="img" name="img" accept="image/*">
+                              <input type="submit">
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <h2>Hey {{ user }} ! This is your profile</h2>
+        {% else %}
+            <h2>Hey {{ user }} ! Youre looking at the profile of {{ name }}</h2>
+        {% endif %}
+
+
+
       <p><strong>Full name: </strong> {{ name|title }}</p>
-      <p><a href="{% url "change_password"%}">change password</a></p>
       <p><strong>Date Joined: </strong> {{ join_date }}</p>
       <p><strong>User Rating - </strong>(This depends on number of participations, wins and organized MUN events): {{ rating }}</p>
       <p><strong>ACHEIVEMENTS -</strong></p>
       <p>{{ acheivement }}</p>
-    
+        {% if edit %}
+        <p><a href="{% url "change_password"%}">change password</a></p>
+        <p><a href="{% url "change_password"%}">edit profile</a></p>
+        {% else %}
+        {% endif %}
     </center>
     {% else %}
-    <center><p>{{username |title }} <a href="{% url "login" %}">Log in</a> Please</p></center>
+    <center><p>{{username |title }} <a href="{% url 'login' %}">Log in</a> Please</p></center>
     {% endif %}
-    
+
+
+
 
     {% endblock %}
   </div>
 </body>
-
 </html>
