@@ -19,10 +19,20 @@
                             <h4>Change picture</h4>
                         </div>
                         <div class="modal-body">
-                            <form action="/profile">
-                              <label for="img">Select image:</label>
+                            <form id="update_user_form" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <!--
+                                    <p>33</p>
+                                    {{ update_user_form.as_p }}
+                                    {{ profile_form.as_pe }}
+                                -->
+                                <img src="{{ profile_form.instance.profile_pic.url }}">
+                                <button type="submit" class=""btn btn-success>Upload</button>
+
+                                <label for="img">Select image:</label>
                               <input type="file" id="img" name="img" accept="image/*">
                               <input type="submit">
+
                             </form>
                         </div>
 
@@ -42,8 +52,8 @@
       <p><strong>ACHEIVEMENTS -</strong></p>
       <p>{{ acheivement }}</p>
         {% if edit %}
-        <p><a href="{% url "change_password"%}">change password</a></p>
-        <p><a href="{% url "change_password"%}">edit profile</a></p>
+        <p><a href="{% url 'password_change' %}">change password</a></p>
+        <p><a href="{% url 'change_password'%}">edit profile</a></p>
         {% else %}
         {% endif %}
     </center>

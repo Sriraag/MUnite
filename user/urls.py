@@ -6,7 +6,8 @@ from django.contrib.auth import views as auth
 
 from user import views
 
-urlpatterns = [ 
+urlpatterns = [
+    path('accounts/', include('django.contrib.auth.urls')),
     path('', views.index, name='index'), 
     path('event/<str:event_name>', views.show_event, name='event'),
     path('submitted', views.save_event, name='save_event'),

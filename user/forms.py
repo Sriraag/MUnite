@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User 
 from django.contrib.auth.forms import UserCreationForm , SetPasswordForm
 from collections import OrderedDict
+from .models import *
 
 
 class UserRegisterForm(UserCreationForm): 
@@ -9,9 +10,27 @@ class UserRegisterForm(UserCreationForm):
     phone_no = forms.CharField(max_length = 20) 
     first_name = forms.CharField(max_length = 20) 
     last_name = forms.CharField(max_length = 20) 
-    class Meta: 
+
+    class Meta:
         model = User 
-        fields = ['username','first_name', 'last_name', 'email', 'phone_no', 'password1', 'password2'] 
+        fields = ['username', 'first_name', 'last_name', 'email', 'phone_no', 'password1', 'password2']
+
+
+'''
+class UserForm2(forms.ModelForm):
+
+    class Meta:
+        model = Delegate
+        fields = ('first_name', 'last_name')
+
+
+class UserImageForm(forms.ModelForm):
+
+    class Meta:
+        model = Delegate
+        fields = ('profile_pic',)
+'''
+
 '''
 class UpdateProfile(forms.ModelForm):
     username = forms.CharField(required=True)

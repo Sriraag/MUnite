@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm  # //, UserImageForm, UserForm2
 from django.template.loader import get_template
 from django.template import Context
 from django.utils import timezone
@@ -15,7 +15,7 @@ from .models import Delegate, Event
 
 def index(request):
     all_events = Event.objects.all().order_by('-date')
-    D=[]
+    D = []
     myEvents = []
     for i in all_events:
         organizer = i.core_organizer
@@ -24,7 +24,8 @@ def index(request):
         date = i.date
         venue = i.venue
         price = i.price
-
+        if date < timezone.now(): # removes events that occurred in past
+            continue
         if str(organizer) == str(request.user):
             myEvents.append(event)
         L = (event, organization, date, venue, price, organizer)
@@ -37,7 +38,8 @@ def index(request):
     return render(request, 'user/index.html', throw_to_frontend)
 
 
-############ event registration saving in database ################################
+# event registration saving in database
+
 def save_event(request):
     print(request.POST)
     # getting current logged in username
@@ -88,7 +90,7 @@ def register(request):
         form = UserRegisterForm()
     return render(request, 'user/register.html', {'form': form, 'title':'register here'})
 
-###### login forms
+# login forms
 
 
 def Login(request):
@@ -112,7 +114,7 @@ def Login(request):
     return render(request, 'user/login.html', {'form': form, 'title':'log in'})
 
 
-########NEW LOGGED IN FUNCTION WHICH SENDS TO PROFILE PAGE OF THE USER ############
+# NEW LOGGED IN FUNCTION WHICH SENDS TO PROFILE PAGE OF THE USER
 
 def loggedin(request, username):
     login = str(request.user)
@@ -140,6 +142,37 @@ def loggedin(request, username):
         'edit':  canedit,
     }
     return render(request, 'user/profile.html', throw_to_frontend)
+
+
+'''
+# EDITING USER PROFILE PICTURE
+
+
+def edit_profile(request):
+
+    if request.method == 'POST':
+        update_user_form = UserForm2(data=request.POST, instance=request.user)
+        profile_form = UserImageForm(request.POST, request.FILES, instance=request.user.user_profile)
+
+        if update_user_form.is_valid() and profile_form.is_valid():
+            user = update_user_form.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+
+            if 'profile_pic' in request.FILES:
+                profile.profile_pic = request.FILES['profile_pic']
+
+            profile.save()
+
+        else:
+            print(update_user_form.errors, profile_form.errors)
+
+    else:
+        update_user_form = UserForm2(instance=request.user)
+        update_profile_form = UserImageForm(instance=request.user.user_profile)
+
+    return redirect(loggedin(request, request.user))
+'''
 
 # Returning create_event page
 
