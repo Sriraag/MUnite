@@ -16,6 +16,13 @@ class UserRegisterForm(UserCreationForm):
         fields = ['username', 'first_name', 'last_name', 'email', 'phone_no', 'password1', 'password2']
 
 
+class CommitteeForm(forms.ModelForm):
+
+    class Meta:
+        model = Committee
+        exclude = ['event', 'id']
+
+
 '''
 class UserForm2(forms.ModelForm):
 

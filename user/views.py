@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import UserRegisterForm  # //, UserImageForm, UserForm2
+from .forms import UserRegisterForm, CommitteeForm  # //, UserImageForm, UserForm2
 from django.template.loader import get_template
 from django.template import Context
 from django.utils import timezone
@@ -142,6 +142,18 @@ def loggedin(request, username):
         'edit':  canedit,
     }
     return render(request, 'user/profile.html', throw_to_frontend)
+
+
+def committee(request, username):
+    context = {}
+
+    form = CommitteeForm(request.POST or None, request.FILES or None)
+
+    if form.is_valid():
+        form.save()
+
+    context['form'] = form
+    return render(request, 'user/create_event.html', context)
 
 
 '''

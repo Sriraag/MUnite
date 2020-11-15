@@ -14,7 +14,7 @@
     }
     else {
       var newdiv = document.createElement('div');
-      newdiv.innerHTML = "<br><h4>Committee " + (counter + 1) + ":</h4><label for='name'>Name: </label><input type = 'text' id = 'name' name = 'name' placeholder = 'Name' > <br><label for='seats'>Total registrations: </label><input type='number' id='seats' name='seats' >";
+      newdiv.innerHTML = "<br><h4>Committee " + (counter + 1) + ":</h4>{{ form.as_p }}";
 
       document.getElementById(divName).appendChild(newdiv);
       counter++;
@@ -43,7 +43,7 @@
     <label for="venue">Venue: </label>
     <input type="text" id="venue" name="venue" placeholder="Venue"><br>
 
-    <label for="price">Reigstration Price per head: </label>
+    <label for="price">Registration Price per head: </label>
     <input type="number" id="price" name="price" placeholder="Price"><br>
 
     <label for="description">Description: </label><br>
@@ -52,11 +52,8 @@
     <h2>Committees</h2>
     <div id="dynamicInput">
       <h4>Committee 1: </h4>
-      <label for="name">Name: </label>
-      <input type="text" id="name" name="name" placeholder="Name"><br>
-
-      <label for="seats">Total registrations: </label>
-      <input type="number" id="seats" name="seats" >
+      {% csrf_token %}
+      {{ form.as_p }}
     </div>
     <input type="button" value="Add Committee" onClick="addInput('dynamicInput');">
 
