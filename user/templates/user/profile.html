@@ -5,7 +5,7 @@
     
     {% if user.is_authenticated %}
     <center>
-
+        
 
         <img src="{{ profile_pic.url }}" alt="" height="250px">
         {% if edit %}
@@ -19,20 +19,18 @@
                             <h4>Change picture</h4>
                         </div>
                         <div class="modal-body">
-                            <form id="update_user_form" method="POST" enctype="multipart/form-data">
+                            <form id="update_user_form" action="/user/edit" method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                <!--
-                                    <p>33</p>
-                                    {{ update_user_form.as_p }}
-                                    {{ profile_form.as_pe }}
-                                -->
+                                    {{ imageform.as_p }}
+                             <!--  
                                 <img src="{{ profile_form.instance.profile_pic.url }}">
                                 <button type="submit" class=""btn btn-success>Upload</button>
 
                                 <label for="img">Select image:</label>
                               <input type="file" id="img" name="img" accept="image/*">
+                            -->
                               <input type="submit">
-
+                            
                             </form>
                         </div>
 

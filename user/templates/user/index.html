@@ -114,14 +114,24 @@
       <br>
 
       <h1>List of events coming</h1>
+      
       {% for e in events %}
         
-        <p><a href="{% url "event" event_name=e.0 %}">{{e.0}}</a></p>
-        <p>{{e.1}}</p>
-        <p>{{e.2}}</p>
-        <p>{{e.3}}</p>
-        <p>Price : {{e.4}}</p>
-        <p>Organized By - {{ e.5 }}</p>
+        <div class="card">
+          <div class="card-header">
+            {{e.0}}
+          </div>
+          <div class="card-body">
+            <p>{{e.1}}</p>
+            <p>{{e.2}}</p>
+            <p>{{e.3}}</p>
+            <p>Price : {{e.4}}</p>
+            <p>Organized By - {{ e.5 }}</p>
+            <a href="{% url "event" event_name=e.0 %}" class="btn btn-primary">View Event</a>
+          </div>
+        </div>
+        
+        
         <br>
         <br>
       {% empty %}

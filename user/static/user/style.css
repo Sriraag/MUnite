@@ -2,3 +2,36 @@ body {
   color: #f58f7c;
   background-color: #222222;
 }
+
+.card{
+  background-color: #F2C4CE;
+  margin: 5px;
+  padding: 25px;
+  border-radius: 8px;
+}
+
+.card-header{
+  font-size: x-large;
+  font-weight: bold;
+  color: #2C2820;
+}
+
+.card-body{
+  color: #222222;
+}
+
+.subtitle-text{
+  color: #d6D6d6;
+  font-size: small;
+}
+
+#event-form{
+  margin: 0;
+  background-color: #f58f7c;
+}
+
+.form-group{
+  color: #4f4f51;
+}
+
+

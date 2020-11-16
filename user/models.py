@@ -1,10 +1,11 @@
 from django.db import models
+from datetime import datetime
 
 # Create your models here.
 class Delegate(models.Model):
   name = models.CharField(max_length=200)
   rating = models.IntegerField()
-  join_date = models.DateTimeField('date joined')
+  join_date = models.DateTimeField('date joined', default=datetime.now())
   first_name = models.CharField(max_length=200)
   last_name = models.CharField(max_length=200)
   acheivement = models.CharField(max_length=500)

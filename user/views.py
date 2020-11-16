@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, reverse, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import UserRegisterForm, CommitteeForm  # //, UserImageForm, UserForm2
+# //, UserImageForm, UserForm2
+from .forms import UserRegisterForm, CommitteeForm, UserImageForm
 from django.template.loader import get_template
 from django.template import Context
 from django.utils import timezone
@@ -24,7 +25,7 @@ def index(request):
         date = i.date
         venue = i.venue
         price = i.price
-        if date < timezone.now(): # removes events that occurred in past
+        if date < timezone.now():  # removes events that occurred in past
             continue
         if str(organizer) == str(request.user):
             myEvents.append(event)
@@ -54,7 +55,7 @@ def save_event(request):
     price = request.POST.get('price')
     description = request.POST.get('description')
     Event.objects.create(core_organizer_id=id, event=event,
-    organization=organization, date=date, venue=venue, price=price, description=description)
+                         organization=organization, date=date, venue=venue, price=price, description=description)
 
     return redirect(index)  # redirects for index view to run
 
@@ -75,20 +76,22 @@ def register(request):
             ######################### mail system ####################################
 
             htmly = get_template('user/Email.html')
-            d = { 'username': username }
+            d = {'username': username}
             subject, from_email, to = 'welcome', 'your_email@gmail.com', email
             html_content = htmly.render(d)
-            # msg = EmailMultiAlternatives(subject, html_content, from_email, [to]) 
+            # msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
             #msg.attach_alternative(html_content, "text/html")
-            #msg.send()
+            # msg.send()
             ###############
-            messages.success(request, f'Your account has been created ! You are now able to log in')
-            newUser = Delegate(name=username, rating=0 , join_date=timezone.now(), first_name=Fname ,last_name = Lname,acheivement="none")
+            messages.success(
+                request, f'Your account has been created ! You are now able to log in')
+            newUser = Delegate(name=username, rating=0, join_date=timezone.now(
+            ), first_name=Fname, last_name=Lname, acheivement="none")
             newUser.save()
             return redirect('login')
     else:
         form = UserRegisterForm()
-    return render(request, 'user/register.html', {'form': form, 'title':'register here'})
+    return render(request, 'user/register.html', {'form': form, 'title': 'register here'})
 
 # login forms
 
@@ -96,7 +99,7 @@ def register(request):
 def Login(request):
     if request.method == 'POST':
 
-        # AuthenticationForm_can_also_be_used__ 
+        # AuthenticationForm_can_also_be_used__
 
         username = request.POST['username']
         password = request.POST['password']
@@ -111,7 +114,7 @@ def Login(request):
         else:
             messages.info(request, f'Account does not exist. Please try again')
     form = AuthenticationForm()
-    return render(request, 'user/login.html', {'form': form, 'title':'log in'})
+    return render(request, 'user/login.html', {'form': form, 'title': 'log in'})
 
 
 # NEW LOGGED IN FUNCTION WHICH SENDS TO PROFILE PAGE OF THE USER
@@ -131,7 +134,9 @@ def loggedin(request, username):
     lname = d.last_name
     name = fname + ' ' + lname
 
-    throw_to_frontend ={
+    imageForm = UserImageForm()
+
+    throw_to_frontend = {
         'title': 'Profile',
         'rating': rating,
         'name': name,
@@ -140,6 +145,7 @@ def loggedin(request, username):
         'acheivement': acheivements,
         'profile_pic': d.profile_pic,
         'edit':  canedit,
+        'imageform': imageForm,
     }
     return render(request, 'user/profile.html', throw_to_frontend)
 
@@ -156,35 +162,31 @@ def committee(request, username):
     return render(request, 'user/create_event.html', context)
 
 
-'''
 # EDITING USER PROFILE PICTURE
 
 
 def edit_profile(request):
 
     if request.method == 'POST':
-        update_user_form = UserForm2(data=request.POST, instance=request.user)
-        profile_form = UserImageForm(request.POST, request.FILES, instance=request.user.user_profile)
+        #update_user_form = UserForm2(data=request.POST, instance=request.user)
+        imageForm = UserImageForm(request.POST, request.FILES)
 
-        if update_user_form.is_valid() and profile_form.is_valid():
-            user = update_user_form.save()
-            profile = profile_form.save(commit=False)
-            profile.user = user
+        if imageForm.is_valid():
+            #user = update_user_form.save()
+            #profile = imageForm.save()
+            #profile.user = user
 
             if 'profile_pic' in request.FILES:
-                profile.profile_pic = request.FILES['profile_pic']
-
-            profile.save()
+                userob = request.user
+                userob.profile_pic = request.FILES['profile_pic']
+            print("test")
+            userob.save()
 
         else:
-            print(update_user_form.errors, profile_form.errors)
+            print(imageForm.errors)
 
-    else:
-        update_user_form = UserForm2(instance=request.user)
-        update_profile_form = UserImageForm(instance=request.user.user_profile)
-
-    return redirect(loggedin(request, request.user))
-'''
+    # return redirect(loggedin(request, request.user))
+    return redirect(f"/user/{request.user.username}")
 
 # Returning create_event page
 
@@ -196,7 +198,7 @@ def create_event(request, username):
 
 
 def password_change(request):
-    return render(request, 'user/change_password.html', {'title':'MUnite'})
+    return render(request, 'user/change_password.html', {'title': 'MUnite'})
 
 
 def show_event(request, event_name):
